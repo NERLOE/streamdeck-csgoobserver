@@ -1,0 +1,41 @@
+{
+  "Actions": [
+    {
+      "Icon": "images/playerswitch",
+      "Name": "Player Switch",
+      "States": [
+        {
+          "Image": "images/playerswitch",
+          "Name": "Initialized",
+          "ShowTitle": true,
+          "TitleAlignment": "middle",
+          "FontFamily": "Verdana",
+          "FontStyle": "Bold",
+          "FontSize": "10"
+        }
+      ],
+      "Tooltip": "Display player names, number and active state.",
+      "UUID": "dk.minetech.csgoobserverhudplugin.playerswitch"
+    }
+  ],
+  "PropertyInspectorPath": "pi/index.html",
+  "Author": "NERLOE",
+  "Name": "CSGOObserverHUDPlugin",
+  "Description": "Observe a CSGO Match.",
+  "Icon": "images/category",
+  "URL": "https://csgo.minetech.dk",
+  "Version": "1.0",
+  "CodePath": "dk.minetech.csgoobserverhudplugin",
+  "Category": "ObserverHUD",
+  "CategoryIcon": "images/category",
+  "OS": [
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "SDKVersion": 2,
+  "Software": {
+    "MinimumVersion": "4.9"
+  }
+}
