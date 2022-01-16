@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-//using System.Net.WebSockets;
-//using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using BarRaider.SdTools;
 using System.Drawing;
-//using SDCSGOObserverHUDPlugin.Models;
-//using Newtonsoft.Json;
-//using System.IO;
 using System.Linq;
 using CSGSI;
 using CSGSI.Nodes;
@@ -35,8 +30,6 @@ namespace CSGOObserverHUDPlugin.Backend
         }
 
         public static Dictionary<string, KeyInfo> keysActive = new Dictionary<string, KeyInfo> { };
-
-        //public static ClientWebSocket _Socket = new ClientWebSocket();
         public static GameStateListener gsl;
 
         public static GameState latestData = null; //GameStateIntegrationPayload
@@ -49,7 +42,6 @@ namespace CSGOObserverHUDPlugin.Backend
             keysActive.Add(connection.ContextId, new KeyInfo(connection, settings));
 
             if (isFirst) {
-                //RunWebsocket(CancellationToken.None, connection.ContextId);
                 gsl = new GameStateListener(3003);
                 gsl.NewGameState += new NewGameStateHandler(OnNewGameState);
 
@@ -67,7 +59,6 @@ namespace CSGOObserverHUDPlugin.Backend
 
         static void OnNewGameState(GameState gs)
         {
-            //await keysActive.First().Value.Connection.LogSDMessage("New gamestate received");
             var keys = keysActive.Keys;
             foreach (var x in keys)
             {
@@ -85,12 +76,9 @@ namespace CSGOObserverHUDPlugin.Backend
             if (isLast)
             {
                 await connection.LogSDMessage("No more shown keys, stopping GSI");
-                //r source = new CancellationTokenSource();
                 gsl.NewGameState -= OnNewGameState;
                 gsl.Stop();
                 gsl = null;
-                //await _Socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Key disappeared", source.Token);
-                //_Socket = new ClientWebSocket();
             }
 
             keysActive.Remove(contextId);
@@ -103,84 +91,6 @@ namespace CSGOObserverHUDPlugin.Backend
 
             UpdateKey(connection.ContextId, latestData);
         }
-
-        /*private static async void RunWebsocket(CancellationToken token, string contextId)
-        {
-            KeyInfo keyInfo = keysActive[contextId];
-            SDConnection connection = keyInfo.Connection;
-            await connection.LogSDMessage("Running websocket");
-            await _Socket.ConnectAsync(new Uri("ws://88.99.5.83:8083"), token);
-
-            var keepRunning = true;
-            while (!token.IsCancellationRequested)
-            {
-                switch (_Socket.State)
-                {
-                    case WebSocketState.CloseReceived:
-                    case WebSocketState.Closed:
-                    case WebSocketState.Aborted:
-                        keepRunning = false;
-                        break;
-                }
-
-                if (!keepRunning) break;
-
-                string jsonString = await GetMessageAsString(token);
-                if (!string.IsNullOrEmpty(jsonString) && !jsonString.StartsWith("\0"))
-                {
-                    try
-                    {
-                        
-                            //await connection.LogSDMessage($"Received websocket msg");
-                            GameStateIntegrationPayload msg = JsonConvert.DeserializeObject<GameStateIntegrationPayload>(jsonString);
-                            if (msg == null)
-                            {
-                                await connection.LogSDMessage($"Unknown message received: {jsonString}");
-                                continue;
-                            }
-
-                            foreach (var x in keysActive)
-                            {
-                                UpdateKey(x.Key, msg);
-                            }
-
-                    }
-                    catch (Exception ex)
-                    {
-                        await connection.LogSDMessage($"Error while processing data from websocket: {ex.ToString()}");
-                        continue;
-                    }
-                }
-            }
-        }
-
-        private static async Task<string> GetMessageAsString(CancellationToken token)
-        {
-            try
-            {
-                using (var ms = new MemoryStream())
-                {
-                    WebSocketReceiveResult result;
-                    do
-                    {
-                        var messageBuffer = WebSocket.CreateClientBuffer(1024, 16);
-                        result = await _Socket.ReceiveAsync(messageBuffer, token);
-                        ms.Write(messageBuffer.Array, messageBuffer.Offset, result.Count);
-                    }
-                    while (!result.EndOfMessage);
-
-                    if (result.MessageType == WebSocketMessageType.Text)
-                    {
-                        string jsonString = UTF8Encoding.UTF8.GetString(ms.ToArray());
-                        return jsonString;
-                    }
-                }
-            } catch (InvalidOperationException)
-            {
-                // Error
-            }
-            return null;
-        }*/
 
         public static KeyInfo GetKey(string contextId)
         {
