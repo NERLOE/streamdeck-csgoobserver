@@ -42,7 +42,7 @@ namespace CSGOObserverHUDPlugin.Backend
             keysActive.Add(connection.ContextId, new KeyInfo(connection, settings));
 
             if (isFirst) {
-                gsl = new GameStateListener(3003);
+                gsl = new GameStateListener(3004);
                 gsl.NewGameState += new NewGameStateHandler(OnNewGameState);
 
                 if (!gsl.Start())
